@@ -86,6 +86,7 @@ body {
     gap: 0.4rem;
 }
 
+.field label,
 .field span {
     font-size: 0.875rem;
     font-weight: 600;
@@ -222,6 +223,18 @@ fieldset.field legend {
 
 .primary-btn:active {
     transform: scale(0.99);
+}
+
+.primary-btn:disabled {
+    background-color: #8fa8e8;
+    cursor: wait;
+}
+
+.optional,
+.help-text {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 400;
 }
 
 .success-message {

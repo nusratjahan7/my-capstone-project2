@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Settings Form</title>
+    <title>User Settings</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -11,94 +11,40 @@
       <section class="form-card" aria-labelledby="settings-title">
         <div class="form-header">
           <p class="eyebrow">Preferences</p>
-          <h1 id="settings-title">Account Settings</h1>
-          <p class="subtitle">Update your profile and security preferences.</p>
+          <h1 id="settings-title">User Settings</h1>
+          <p class="subtitle">Update your account details.</p>
         </div>
 
         <form id="settings-form" novalidate>
           <div class="form-grid">
-            <label class="field">
-              <span>Full name</span>
-              <input
-                id="fullName"
-                name="fullName"
-                type="text"
-                placeholder="Jordan Lee"
-              />
-              <small class="error" id="fullName-error"></small>
-            </label>
+            <div class="field field-full">
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" autocomplete="username" aria-describedby="username-error" aria-invalid="false" />
+              <small class="error" id="username-error" role="alert"></small>
+            </div>
 
-            <label class="field">
-              <span>Email</span>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="jordan@example.com"
-              />
-              <small class="error" id="email-error"></small>
-            </label>
+            <div class="field field-full">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-error" aria-invalid="false" />
+              <small class="error" id="email-error" role="alert"></small>
+            </div>
 
-            <label class="field">
-              <span>Password</span>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter a secure password"
-              />
-              <small class="error" id="password-error"></small>
-            </label>
-
-            <label class="field">
-              <span>Confirm password</span>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="Re-enter your password"
-              />
-              <small class="error" id="confirmPassword-error"></small>
-            </label>
-
-            <label class="field field-full">
-              <span>Time zone</span>
-              <select id="timezone" name="timezone">
-                <option value="">Select a timezone</option>
-                <option value="UTC-8">UTC-8</option>
-                <option value="UTC-5">UTC-5</option>
-                <option value="UTC+0">UTC+0</option>
-                <option value="UTC+1">UTC+1</option>
-                <option value="UTC+5:30">UTC+5:30</option>
-              </select>
-              <small class="error" id="timezone-error"></small>
-            </label>
-
-            <fieldset class="field field-full">
-              <legend>Email notifications</legend>
-              <label class="checkbox-row">
-                <input type="checkbox" name="notifications" value="product" />
-                <span>Product updates</span>
-              </label>
-              <label class="checkbox-row">
-                <input type="checkbox" name="notifications" value="security" />
-                <span>Security alerts</span>
-              </label>
-            </fieldset>
+            <div class="field field-full">
+              <label for="password">New password <span class="optional">(optional)</span></label>
+              <input id="password" name="password" type="password" autocomplete="new-password" aria-describedby="password-help password-error" aria-invalid="false" />
+              <small id="password-help" class="help-text">Use 8 or more characters with uppercase, lowercase, and a special character.</small>
+              <small class="error" id="password-error" role="alert"></small>
+            </div>
           </div>
 
           <div class="actions">
             <button type="submit" class="primary-btn">Save settings</button>
-            <p
-              id="success-message"
-              class="success-message"
-              aria-live="polite"
-            ></p>
+            <p id="success-message" class="success-message" aria-live="polite"></p>
           </div>
         </form>
       </section>
     </main>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

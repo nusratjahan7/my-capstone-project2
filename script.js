@@ -1,118 +1,53 @@
+import { validateSettings } from './validation.js';
+
 const form = document.getElementById('settings-form');
-const fields = {
-    fullName: document.getElementById('fullName'),
-    email: document.getElementById('email'),
-    password: document.getElementById('password'),
-    confirmPassword: document.getElementById('confirmPassword'),
-    timezone: document.getElementById('timezone'),
-};
-
-const errors = {
-    fullName: document.getElementById('fullName-error'),
-    email: document.getElementById('email-error'),
-    password: document.getElementById('password-error'),
-    confirmPassword: document.getElementById('confirmPassword-error'),
-    timezone: document.getElementById('timezone-error'),
-};
-
+const submitButton = form.querySelector('button[type="submit"]');
 const successMessage = document.getElementById('success-message');
+const fieldNames = ['username', 'email', 'password'];
+
+function valuesFromForm() {
+  return Object.fromEntries(new FormData(form));
+}
 
 function setError(fieldName, message) {
-    fields[fieldName].setAttribute('aria-invalid', message ? 'true' : 'false');
-    errors[fieldName].textContent = message;
+  const field = document.getElementById(fieldName);
+  const error = document.getElementById(`${fieldName}-error`);
+  field.setAttribute('aria-invalid', String(Boolean(message)));
+  error.textContent = message;
 }
 
-function validateField(fieldName) {
-    const value = fields[fieldName].value.trim();
-
-    if (fieldName === 'fullName') {
-        if (!value) {
-            setError('fullName', 'Full name is required.');
-            return false;
-        }
-        if (value.length < 2) {
-            setError('fullName', 'Enter at least 2 characters.');
-            return false;
-        }
-        setError('fullName', '');
-        return true;
-    }
-
-    if (fieldName === 'email') {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!value) {
-            setError('email', 'Email is required.');
-            return false;
-        }
-        if (!emailPattern.test(value)) {
-            setError('email', 'Enter a valid email address.');
-            return false;
-        }
-        setError('email', '');
-        return true;
-    }
-
-    if (fieldName === 'password') {
-        if (!value) {
-            setError('password', 'Password is required.');
-            return false;
-        }
-        if (value.length < 8) {
-            setError('password', 'Password must be at least 8 characters.');
-            return false;
-        }
-        setError('password', '');
-        return true;
-    }
-
-    if (fieldName === 'confirmPassword') {
-        if (!fields.confirmPassword.value.trim()) {
-            setError('confirmPassword', 'Please confirm your password.');
-            return false;
-        }
-        if (fields.confirmPassword.value !== fields.password.value) {
-            setError('confirmPassword', 'Passwords do not match.');
-            return false;
-        }
-        setError('confirmPassword', '');
-        return true;
-    }
-
-    if (fieldName === 'timezone') {
-        if (!value) {
-            setError('timezone', 'Please choose a timezone.');
-            return false;
-        }
-        setError('timezone', '');
-        return true;
-    }
-
-    return true;
+function showValidation() {
+  const errors = validateSettings(valuesFromForm());
+  fieldNames.forEach((fieldName) => setError(fieldName, errors[fieldName] ?? ''));
+  return errors;
 }
 
-Object.entries(fields).forEach(([fieldName, field]) => {
-    field.addEventListener('blur', () => validateField(fieldName));
-    field.addEventListener('input', () => {
-        if (fieldName === 'password' || fieldName === 'confirmPassword') {
-            validateField('password');
-            validateField('confirmPassword');
-        } else {
-            validateField(fieldName);
-        }
-    });
+fieldNames.forEach((fieldName) => {
+  document.getElementById(fieldName).addEventListener('input', () => {
+    successMessage.textContent = '';
+    showValidation();
+  });
 });
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const errors = showValidation();
 
-    const results = Object.keys(fields).map(validateField);
-    const allValid = results.every(Boolean);
+  if (Object.keys(errors).length > 0) {
+    successMessage.textContent = '';
+    return;
+  }
 
-    if (allValid) {
-        successMessage.textContent = 'Settings saved successfully.';
-        form.reset();
-        Object.keys(errors).forEach((key) => setError(key, ''));
-    } else {
-        successMessage.textContent = '';
-    }
+  submitButton.disabled = true;
+  submitButton.textContent = 'Saving…';
+  successMessage.textContent = '';
+
+  try {
+    // Replace this with the application's settings API when one is available.
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    successMessage.textContent = 'Settings saved successfully.';
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Save settings';
+  }
 });
